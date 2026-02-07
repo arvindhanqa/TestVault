@@ -1,0 +1,127 @@
+<UserControl x:Class="TestVault.UI.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TestVault.UI.ViewModels"
+             Background="#F5F6FA">
+
+    <UserControl.Resources>
+        <Style x:Key="CardBorder" TargetType="Border">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" BlurRadius="6" Opacity="0.15" Color="#000000" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="CardValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#1A1A2E" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="CardLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#888" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,4,0,0" />
+        </Style>
+        <Style x:Key="ChartHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#1A1A2E" />
+            <Setter Property="Margin" Value="4,0,0,8" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <DockPanel Grid.Row="0" Margin="8,0,8,8">
+            <TextBlock Text="Dashboard" FontSize="22" FontWeight="Bold" Foreground="#1A1A2E"
+                       VerticalAlignment="Center" DockPanel.Dock="Left" />
+            <Button Content="Refresh" Command="{Binding RefreshCommand}"
+                    DockPanel.Dock="Right" HorizontalAlignment="Right" Padding="20,8" />
+        </DockPanel>
+
+        <!-- Summary Cards -->
+        <UniformGrid Grid.Row="1" Rows="1" Columns="4">
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="{Binding TotalCases}" Style="{StaticResource CardValue}" />
+                    <TextBlock Text="Total Cases" Style="{StaticResource CardLabel}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="{Binding ExecutedCases}" Style="{StaticResource CardValue}" />
+                    <TextBlock Text="Executed" Style="{StaticResource CardLabel}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource CardValue}">
+                        <TextBlock.Text>
+                            <Binding Path="PassRate" StringFormat="{}{0:F1}%" />
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Text="Pass Rate" Style="{StaticResource CardLabel}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="{Binding LastSyncTime}" Style="{StaticResource CardValue}"
+                               FontSize="16" TextWrapping="Wrap" />
+                    <TextBlock Text="Last Sync" Style="{StaticResource CardLabel}" />
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <!-- Charts 2x2 (created in code-behind for LiveCharts) -->
+        <Grid Grid.Row="2" Margin="0,4,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorder}">
+                <DockPanel>
+                    <TextBlock Text="Test Cases by Module" Style="{StaticResource ChartHeader}" DockPanel.Dock="Top" />
+                    <ContentControl x:Name="ModuleChartHost" />
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardBorder}">
+                <DockPanel>
+                    <TextBlock Text="Test Cases by Priority" Style="{StaticResource ChartHeader}" DockPanel.Dock="Top" />
+                    <ContentControl x:Name="PriorityChartHost" />
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardBorder}">
+                <DockPanel>
+                    <TextBlock Text="Test Cases by Status" Style="{StaticResource ChartHeader}" DockPanel.Dock="Top" />
+                    <ContentControl x:Name="StatusChartHost" />
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardBorder}">
+                <DockPanel>
+                    <TextBlock Text="Executions (Last 30 Days)" Style="{StaticResource ChartHeader}" DockPanel.Dock="Top" />
+                    <ContentControl x:Name="TrendChartHost" />
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

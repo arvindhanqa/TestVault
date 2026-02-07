@@ -1,0 +1,77 @@
+<Window x:Class="TestVault.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="TestVault" Height="768" Width="1280"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding SyncCommand}" />
+    </Window.InputBindings>
+
+    <DockPanel>
+        <!-- Menu Bar -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Settings" Click="Settings_Click" />
+                <Separator />
+                <MenuItem Header="_Emergency Purge" Click="EmergencyPurge_Click" />
+                <Separator />
+                <MenuItem Header="E_xit" Click="Exit_Click" />
+            </MenuItem>
+        </Menu>
+
+        <!-- Toolbar -->
+        <ToolBar DockPanel.Dock="Top">
+            <Button Content="Sync Now" Click="SyncNow_Click" x:Name="SyncButton" />
+            <Separator />
+            <Button Content="Log In Again" Click="LoginAgain_Click" x:Name="LoginAgainButton" />
+            <Separator />
+            <ProgressBar x:Name="SyncProgress" Width="200" Height="18" Visibility="Collapsed" IsIndeterminate="True" />
+        </ToolBar>
+
+        <!-- Status Bar -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock x:Name="StatusText" Text="Ready" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="SecurityIndicator" Text="&#x1F512; Secure" Foreground="Green" />
+                    <TextBlock Text=" | " />
+                    <TextBlock x:Name="ConnectionStatus" Text="Online" Foreground="Green" />
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- Main Content -->
+        <Grid>
+            <!-- Login Panel (WebView2) -->
+            <Grid x:Name="LoginPanel" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Sign in to SharePoint to continue"
+                           FontSize="16" FontWeight="Bold" Margin="10" HorizontalAlignment="Center" />
+                <wv2:WebView2 Grid.Row="1" x:Name="LoginWebView"
+                              NavigationCompleted="LoginWebView_NavigationCompleted" />
+            </Grid>
+
+            <!-- Dashboard Panel -->
+            <Grid x:Name="DashboardPanel" Visibility="Visible">
+                <TabControl x:Name="MainTabControl">
+                    <TabItem Header="Dashboard" x:Name="DashboardTab">
+                        <ContentControl x:Name="DashboardContent" />
+                    </TabItem>
+                    <TabItem Header="Test Cases" x:Name="TestCasesTab">
+                        <ContentControl x:Name="TestCasesContent" />
+                    </TabItem>
+                    <TabItem Header="Test Runs" x:Name="TestRunsTab">
+                        <ContentControl x:Name="TestRunsContent" />
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>
